@@ -1,36 +1,44 @@
 import { Shield, Users, Calendar, Hash, Bot, MessageCircle } from 'lucide-react'
+import { motion } from 'framer-motion'
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 12 },
+  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.45, delay: i * 0.06 } }),
+}
 
 export function About() {
+  const cards = [
+    { icon: Users, title: 'Active Community', desc: 'Daily chats and regular events' },
+    { icon: Shield, title: 'Safe & Welcoming', desc: 'Clear rules and helpful staff' },
+    { icon: Calendar, title: 'Events', desc: 'Movie nights, game lobbies, study sessions' },
+    { icon: Hash, title: 'Organized Channels', desc: 'Find exactly what you\'re looking for' },
+  ]
+
   return (
     <section id="about" className="max-w-6xl mx-auto px-4 sm:px-6 py-16">
       <div className="grid md:grid-cols-2 gap-10 items-center">
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">What is this place?</h2>
-          <p className="text-white/80 leading-relaxed">
-            We're a community-focused Discord server made for friendly conversations, game nights, and helping each other out. We keep things inclusive, organized, and fun with channels for every topic and a friendly staff team.
-          </p>
-        </div>
+        <motion.div initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
+          <motion.h2 variants={fadeUp} className="text-2xl md:text-3xl font-bold text-white mb-3">What is this place?</motion.h2>
+          <motion.p variants={fadeUp} className="text-white/80 leading-relaxed">
+            We\'re a community-focused Discord server made for friendly conversations, game nights, and helping each other out. We keep things inclusive, organized, and fun with channels for every topic and a friendly staff team.
+          </motion.p>
+        </motion.div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-            <Users className="text-indigo-300 mb-2"/>
-            <p className="text-white font-semibold">Active Community</p>
-            <p className="text-white/70 text-sm">Daily chats and regular events</p>
-          </div>
-          <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-            <Shield className="text-indigo-300 mb-2"/>
-            <p className="text-white font-semibold">Safe & Welcoming</p>
-            <p className="text-white/70 text-sm">Clear rules and helpful staff</p>
-          </div>
-          <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-            <Calendar className="text-indigo-300 mb-2"/>
-            <p className="text-white font-semibold">Events</p>
-            <p className="text-white/70 text-sm">Movie nights, game lobbies, study sessions</p>
-          </div>
-          <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-            <Hash className="text-indigo-300 mb-2"/>
-            <p className="text-white font-semibold">Organized Channels</p>
-            <p className="text-white/70 text-sm">Find exactly what you're looking for</p>
-          </div>
+          {cards.map((c, i) => (
+            <motion.div
+              key={c.title}
+              custom={i}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={fadeUp}
+              className="p-4 rounded-lg bg-white/5 border border-white/10"
+            >
+              <c.icon className="text-indigo-300 mb-2" />
+              <p className="text-white font-semibold">{c.title}</p>
+              <p className="text-white/70 text-sm">{c.desc}</p>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
@@ -51,10 +59,17 @@ export function Rules() {
       <h2 className="text-3xl font-bold text-white mb-6">Server Rules</h2>
       <div className="space-y-4">
         {rules.map((r, i) => (
-          <div key={i} className="p-5 rounded-lg bg-white/5 border border-white/10">
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.35, delay: i * 0.05 }}
+            className="p-5 rounded-lg bg-white/5 border border-white/10"
+          >
             <p className="text-white font-semibold">{i + 1}. {r.title}</p>
             <p className="text-white/70">{r.desc}</p>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>
@@ -74,14 +89,22 @@ export function Roles() {
     <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16">
       <h2 className="text-3xl font-bold text-white mb-6">Role Colors</h2>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {roles.map((role) => (
-          <div key={role.name} className="p-5 rounded-lg bg-white/5 border border-white/10">
+        {roles.map((role, i) => (
+          <motion.div
+            key={role.name}
+            initial={{ opacity: 0, y: 8, rotateX: -8 }}
+            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: i * 0.05 }}
+            className="p-5 rounded-lg bg-white/5 border border-white/10 will-change-transform"
+            style={{ transformStyle: 'preserve-3d' }}
+          >
             <div className="flex items-center gap-3 mb-1">
               <span className={`inline-block w-3 h-3 rounded-full ${role.color}`} />
               <p className="text-white font-semibold">{role.name}</p>
             </div>
             <p className="text-white/70 text-sm">{role.desc}</p>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>
@@ -100,13 +123,20 @@ export function Events() {
       <h2 className="text-3xl font-bold text-white mb-6">Events</h2>
       <div className="space-y-4">
         {events.map((e, i) => (
-          <div key={i} className="p-5 rounded-lg bg-white/5 border border-white/10">
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, x: -8 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: i * 0.06 }}
+            className="p-5 rounded-lg bg-white/5 border border-white/10"
+          >
             <div className="flex items-center justify-between">
               <p className="text-white font-semibold">{e.title}</p>
               <span className="text-xs text-white/60">{e.date}</span>
             </div>
             <p className="text-white/70">{e.desc}</p>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>
@@ -126,10 +156,17 @@ export function FAQ() {
       <h2 className="text-3xl font-bold text-white mb-6">FAQ</h2>
       <div className="space-y-3">
         {faqs.map((item, i) => (
-          <details key={i} className="group bg-white/5 border border-white/10 rounded-lg p-4">
+          <motion.details
+            key={i}
+            initial={{ opacity: 0, scale: 0.98 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.3, delay: i * 0.05 }}
+            className="group bg-white/5 border border-white/10 rounded-lg p-4"
+          >
             <summary className="list-none cursor-pointer text-white font-semibold">{item.q}</summary>
             <p className="text-white/70 mt-2">{item.a}</p>
-          </details>
+          </motion.details>
         ))}
       </div>
     </section>
@@ -147,11 +184,18 @@ export function Staff() {
     <section className="max-w-4xl mx-auto px-4 sm:px-6 py-16">
       <h2 className="text-3xl font-bold text-white mb-6">Staff Team</h2>
       <div className="grid sm:grid-cols-2 gap-4">
-        {staff.map((s) => (
-          <div key={s.name} className="p-5 rounded-lg bg-white/5 border border-white/10">
+        {staff.map((s, i) => (
+          <motion.div
+            key={s.name}
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.35, delay: i * 0.05 }}
+            className="p-5 rounded-lg bg-white/5 border border-white/10"
+          >
             <p className="text-white font-semibold">{s.name} <span className={`text-sm ${s.color}`}>({s.role})</span></p>
             <p className="text-white/60 text-sm">{s.tag}</p>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>
